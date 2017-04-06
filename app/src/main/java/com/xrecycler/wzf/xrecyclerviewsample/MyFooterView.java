@@ -15,7 +15,7 @@ import com.xrecycler.wzf.xrecyclerview_zf.ptr.FooterView;
 /**
  * ================================================
  * 描    述：
- * 作    者：王智凡
+ * 作    者：wzf
  * 创建日期：2017/3/29
  * 版    本：1.0
  * 修订历史：
