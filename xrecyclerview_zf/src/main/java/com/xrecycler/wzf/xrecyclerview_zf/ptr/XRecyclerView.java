@@ -156,6 +156,7 @@ public class XRecyclerView extends RecyclerView {
             } else {
                 lastVisibleItemPosition = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
             }
+            // layoutManager.getChildCount()当前可视的 item 的数量
             if (layoutManager.getChildCount() > 0
                     && lastVisibleItemPosition >= layoutManager.getItemCount() - 1
                     && layoutManager.getItemCount() > layoutManager.getChildCount()
@@ -232,7 +233,8 @@ public class XRecyclerView extends RecyclerView {
 
     public void refresh() {
         if (pullRefreshEnabled && mLoadingListener != null) {
-            mRefreshHeader.setState(BaseRefreshHeader.STATE_START_REFRESH);
+            mRefreshHeader.updateState(BaseRefreshHeader.STATE_START_REFRESH);
+            mRefreshHeader.smoothToMeasureHeight();
             mLoadingListener.onRefresh();
         }
     }
@@ -293,7 +295,7 @@ public class XRecyclerView extends RecyclerView {
         }
     }
 
-    class WrapAdapter extends Adapter<ViewHolder> {
+    class WrapAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private Adapter adapter;
 

@@ -1,6 +1,8 @@
 package com.xrecycler.wzf.xrecyclerview_zf.ptr;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
@@ -37,6 +39,7 @@ public abstract class FooterView extends FrameLayout {
         init();
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public FooterView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();

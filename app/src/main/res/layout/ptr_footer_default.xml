@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/layout_footer_loading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="25dp"
+            android:layout_height="25dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_vertical"
+            android:text="正在加载..."
+            android:textColor="#666666"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_footer_nomore"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="80dp"
+            android:layout_height="@dimen/lv_line"
+            android:background="@color/line_color" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center_vertical"
+            android:text="我也是有底线的~"
+            android:textColor="#999999"
+            android:textSize="14sp" />
+
+        <View
+            android:layout_width="80dp"
+            android:layout_height="@dimen/lv_line"
+            android:background="@color/line_color" />
+    </LinearLayout>
+</FrameLayout>

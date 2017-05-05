@@ -1,7 +1,9 @@
 package com.xrecycler.wzf.xrecyclerview_zf.ptr;
 
 import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -36,6 +38,7 @@ public abstract class HeaderView extends FrameLayout implements BaseRefreshHeade
         initView();
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public HeaderView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         initView();
@@ -58,13 +61,14 @@ public abstract class HeaderView extends FrameLayout implements BaseRefreshHeade
 
     @Override
     public void onMove(float delta) {
-        if (getVisibleHeight() > 0 || delta > 0) {
-            setVisibleHeight((int) delta + getVisibleHeight());
+        int visiableHeight = getVisibleHeight();
+        if (visiableHeight > 0 || delta > 0) {
+            setVisibleHeight((int) delta + visiableHeight);
             if (mState <= STATE_RELEASE_TO_REFRESH) { // 未处于刷新状态，更新箭头
                 if (getVisibleHeight() > mMeasuredHeight) {
-                    setState(STATE_RELEASE_TO_REFRESH);
+                    updateState(STATE_RELEASE_TO_REFRESH);
                 } else {
-                    setState(STATE_NORMAL);
+                    updateState(STATE_NORMAL);
                 }
             }
         }
@@ -78,7 +82,7 @@ public abstract class HeaderView extends FrameLayout implements BaseRefreshHeade
             isOnRefresh = false;
 
         if (getVisibleHeight() > mMeasuredHeight && mState < STATE_START_REFRESH) {
-            setState(STATE_START_REFRESH);
+            updateState(STATE_START_REFRESH);
             isOnRefresh = true;
         }
         if (mState != STATE_START_REFRESH)
@@ -90,12 +94,20 @@ public abstract class HeaderView extends FrameLayout implements BaseRefreshHeade
 
     @Override
     public void refreshComplete() {
-        setState(STATE_REFRESH_DONE);
+        updateState(STATE_REFRESH_DONE);
         new Handler().postDelayed(new Runnable() {
             public void run() {
                 reset();
             }
         }, 200);
+    }
+
+    public final void updateState(int state) {
+        setState(state);
+        if (state == STATE_START_REFRESH && mState != STATE_START_REFRESH) {
+
+        }
+        mState = state;
     }
 
     /**
@@ -120,7 +132,7 @@ public abstract class HeaderView extends FrameLayout implements BaseRefreshHeade
         smoothScrollTo(0);
         new Handler().postDelayed(new Runnable() {
             public void run() {
-                setState(STATE_NORMAL);
+                updateState(STATE_NORMAL);
             }
         }, 500);
     }
@@ -137,13 +149,16 @@ public abstract class HeaderView extends FrameLayout implements BaseRefreshHeade
         return lp.height;
     }
 
+    public final void smoothToMeasureHeight() {
+        smoothScrollTo(mMeasuredHeight);
+    }
+
     protected void smoothScrollTo(int destHeight) {
         ValueAnimator animator = ValueAnimator.ofInt(getVisibleHeight(), destHeight);
         animator.setDuration(300).start();
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                Log.i("info1", "" + ((int) animation.getAnimatedValue()));
                 setVisibleHeight((int) animation.getAnimatedValue());
             }
         });

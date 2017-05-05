@@ -4,9 +4,11 @@ import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xrecycler.wzf.xrecyclerview_zf.ptr.FooterView;
@@ -39,35 +41,35 @@ public class MyFooterView extends FooterView {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
+    private LinearLayout layoutLoading;
+    private LinearLayout layoutNoMore;
+
     @Override
     public View onCreateFooterView() {
-        setBackgroundColor(Color.BLUE);
-        textView = new TextView(getContext());
-        textView.setTextColor(Color.WHITE);
-        textView.setTextSize(16);
-        textView.setText("上拉加载更多...");
-        FrameLayout.LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        textView.setLayoutParams(params);
-        textView.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
-        textView.setPadding(0, 30, 0, 30);
-        textView.setLayoutParams(params);
-        return textView;
+        Context context = getContext();
+        View view = LayoutInflater.from(context).inflate(R.layout.ptr_footer_default, null);
+        layoutLoading = (LinearLayout) view.findViewById(R.id.layout_footer_loading);
+        layoutNoMore = (LinearLayout) view.findViewById(R.id.layout_footer_nomore);
+        return view;
     }
-
-    private TextView textView;
 
     @Override
     public void setStatus(int state) {
         switch (state) {
             case FooterView.STATE_LOADING:
-                textView.setText("正在加载....");
+                setLayoutLoadingVisiable(true);
                 break;
             case FooterView.STATE_COMPLETE:
-                textView.setText("加载完成");
+                //  加载完成
                 break;
             case FooterView.STATE_NOMORE:
-                textView.setText("我也是有底线的~");
+                setLayoutLoadingVisiable(false);
                 break;
         }
+    }
+
+    private void setLayoutLoadingVisiable(boolean isShow) {
+        layoutLoading.setVisibility(isShow ? VISIBLE : GONE);
+        layoutNoMore.setVisibility(isShow ? GONE : VISIBLE);
     }
 }

@@ -25,8 +25,7 @@ import java.util.ArrayList;
  */
 public class LinearActivity extends AppCompatActivity {
 
-    private int refreshTime = 0;
-    private int times = 0;
+    private int time = 0;
     private ArrayList<String> listData;
     private MyAdapter mAdapter;
 
@@ -46,45 +45,39 @@ public class LinearActivity extends AppCompatActivity {
         mRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
-                refreshTime++;
-                times = 0;
                 new Handler().postDelayed(new Runnable() {
                     public void run() {
+                        time = 0;
                         listData.clear();
                         for (int i = 0; i < 15; i++) {
-                            listData.add("item" + i + "after " + refreshTime + " times of refresh");
+                            listData.add("item" + i + "after " + time + " times of refresh");
                         }
                         mAdapter.notifyDataSetChanged();
                         mRecyclerView.refreshComplete();
                     }
-
-                }, 3000);            //refresh data here
+                }, 2000);
             }
 
             @Override
             public void onLoadMore() {
-                if (times < 2) {
-                    new Handler().postDelayed(new Runnable() {
-                        public void run() {
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        if (time >= 2) {
+                            for (int i = 0; i < 3; i++) {
+                                listData.add("item最后" + i + "个");
+                            }
+                            mAdapter.notifyDataSetChanged();
+                            mRecyclerView.setNoMore(true);
+                        } else {
                             for (int i = 0; i < 15; i++) {
                                 listData.add("item" + (1 + listData.size()));
                             }
                             mRecyclerView.loadMoreComplete();
                             mAdapter.notifyDataSetChanged();
                         }
-                    }, 1000);
-                } else {
-                    new Handler().postDelayed(new Runnable() {
-                        public void run() {
-                            for (int i = 0; i < 9; i++) {
-                                listData.add("item" + (1 + listData.size()));
-                            }
-                            mRecyclerView.setNoMore(true);
-                            mAdapter.notifyDataSetChanged();
-                        }
-                    }, 1000);
-                }
-                times++;
+                        time++;
+                    }
+                }, 2000);
             }
         });
 
